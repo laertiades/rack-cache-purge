@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.rubyforge_project = '[none]'
 
-  s.add_dependency 'rack-cache', '~> 0.5'
+  s.add_dependency 'rack-cache', '~> 2.2'
 
   s.add_development_dependency 'ruby-debug'
   s.add_development_dependency 'test_declarative'

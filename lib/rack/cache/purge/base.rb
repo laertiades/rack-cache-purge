@@ -4,21 +4,18 @@ module Rack
       module Base
         attr_reader :app, :purger
 
-        def initialize(app, options = {})
-          self.class.allow_http_purge! if options[:allow_http_purge]
+        def initialize(app, purge_header)
           @app = app
+	  @purge_header = purge_header
         end
 
         def call(env)
-          purger = Purger.new(env)
-          status, headers, body = app.call(env.merge(PURGER_HEADER => purger))
-
-          # TODO we probably should remove the headers here but i can't figure out
-          # how to get the middlewares correctly pushed to the rails middleware stack
-          # purger.purge(headers.delete(PURGE_HEADER)) if headers.key?(PURGE_HEADER)
-
-          purger.purge(headers[PURGE_HEADER]) if headers.key?(PURGE_HEADER)
-          [status, headers, body]
+	  if env[@purge_header].blank?
+            @app.call(env)
+	  else
+            purger = Purger.new(env)
+            purger.purge(env[@purge_header])
+	  end
         end
       end
     end
