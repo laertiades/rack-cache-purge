@@ -14,9 +14,8 @@ module Rack
         def purge(uris)
 	  message = []
           normalize_uris(uris).map do |uri|
-            stripped_uri = uri.sub /^\/*/, ''
-	    message.push purgeDevice(stripped_uri, "desktop")
-	    message.push purgeDevice(stripped_uri, "mobile")
+	    message.push purgeDevice(uri, "desktop")
+	    message.push purgeDevice(uri, "mobile")
 	  end
 	  [200, {}, message]
         end
